@@ -19,4 +19,5 @@ Route::get('/', 'ParseController@index');
 Route::post('/', 'ParseController@load');
 Route::get('/filelist/{id?}', 'ParseController@readDirectory');
 Route::get('/filelist/{id?}/{filename?}', 'ParseController@readFile');
-Route::get('/analyze', 'ParseController@analyze');
+Route::get('/analyze/{id?}', 'ParseController@analyze');
+Route::get('/analyze/{syntax?}', 'ParseController@readSyntax');

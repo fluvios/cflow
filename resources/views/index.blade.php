@@ -20,7 +20,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-            <p>Left Logo</p>
+            <img src="{{ asset('logo.jpg') }}" alt="">
         </div>
         <div class="col-md-6">
             <div class="row">

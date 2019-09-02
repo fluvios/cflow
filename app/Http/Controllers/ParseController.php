@@ -41,7 +41,7 @@ class ParseController extends Controller
 
     // Function for load result page
     public function analyze($id) {
-        return view('script'); 
+        return view('script', compact('id')); 
     }
 
     // Function read all files in the folder
