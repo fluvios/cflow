@@ -26,7 +26,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">Fun CaG</a>
+    <a class="navbar-brand mr-1" href="{{ url('/') }}">Fun CaG</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
       <i class="fas fa-bars"></i>
@@ -35,14 +35,10 @@
     <!-- Navbar -->
     <ul class="navbar-nav ml-auto ml-md-0">
       <li class="nav-item dropdown no-arrow mx-1">
-        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Files
-        </a>
+        <a class="navbar-brand mr-1" href="{{ url('/filelist/'.$id) }}">Files</a>
       </li>
       <li class="nav-item dropdown no-arrow mx-1">
-      <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Functions
-        </a>
+        <a class="navbar-brand mr-1" href="{{ url('/analyze/'.$id) }}">Analyze</a>
       </li>
     </ul>
   </nav>
@@ -53,9 +49,9 @@
     <ul class="sidebar navbar-nav">
       @foreach($files as $file)
       <li class="nav-item active">
-        <a class="nav-link" href="#" onclick="outputFile('{{$id}}','{{$file}}');">
+        <a class="nav-link" href="#" onclick="outputFile('{{$id}}','{{$file['name']}}');">
           <i class="fas fa-fw fa-file"></i>
-          <span>{{ $file }}</span>
+          <span>{{ $file['name'] }}</span>
         </a>
       </li>
       @endforeach

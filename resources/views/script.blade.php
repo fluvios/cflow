@@ -26,7 +26,7 @@
 
   <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">Fun CaG</a>
+    <a class="navbar-brand mr-1" href="{{ url('/') }}">Fun CaG</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
       <i class="fas fa-bars"></i>
@@ -35,14 +35,10 @@
     <!-- Navbar -->
     <ul class="navbar-nav ml-auto ml-md-0">
       <li class="nav-item dropdown no-arrow mx-1">
-        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Files
-        </a>
+        <a class="navbar-brand mr-1" href="{{ url('/filelist/'.$id) }}">Files</a>
       </li>
       <li class="nav-item dropdown no-arrow mx-1">
-      <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Functions
-        </a>
+        <a class="navbar-brand mr-1" href="{{ url('/analyze/'.$id) }}">Analyze</a>
       </li>
     </ul>
   </nav>
@@ -51,30 +47,14 @@
 
     <!-- Sidebar -->
     <ul class="sidebar navbar-nav">
-    <li class="nav-item active">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-cube"></i>
-          <span>registerEmp()</span>
-        </a>
-      </li>
+      @foreach($codes['flist'] as $code)
       <li class="nav-item active">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="#" onclick="outputFile('{{$id}}','{{$codes['name']}}');">
           <i class="fas fa-fw fa-cube"></i>
-          <span>printAll()</span>
+          <span>{{ $code }}</span>
         </a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#">
-          <i class="fas fa-fw fa-cube"></i>
-          <span>searchByName()</span>
-        </a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#" onclick="outputFunction('{{ $id }}','save.c');">
-          <i class="fas fa-fw fa-cube"></i>
-          <span>save()</span>
-        </a>
-      </li>
+      @endforeach
     </ul>
 
     <div id="content-wrapper">
@@ -193,7 +173,7 @@
   <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 
   <script>
-    function outputFunction(id, filename){
+    function outputFile(id, filename){
         document.getElementById("mainfile").innerHTML = filename;
 
         $.get('/filelist/'+id+'/'+filename, function(response) {
