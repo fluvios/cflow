@@ -20,6 +20,9 @@
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
 
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+
 </head>
 
 <body id="page-top">
@@ -75,7 +78,7 @@
         <!-- Code Snippet-->
         <xpm>
             <pre id="codeblocks">
-            <!-- your code here -->
+              <!-- your code here -->
 
             </pre>
         </xpm>
@@ -134,24 +137,31 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
-        </div>
+<!-- Modal -->
+<div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Code Snippet-->
+        <pre>
+            <code id="codejam">
+            <!-- your code here -->
+
+            </code>
+        </pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
@@ -172,14 +182,53 @@
   <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
   <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.1.5/highlightjs-highlight-lines.min.js"></script>
+
   <script>
+    hljs.initHighlightingOnLoad();
+
     function outputFile(id, filename){
         document.getElementById("mainfile").innerHTML = filename;
 
         $.get('/filelist/'+id+'/'+filename, function(response) {
-            $("#codeblocks").html(response);
-        });
+            var textcontent = response;
+            var reglist = funList(response);
+            for(x in reglist) {
+              var link = "<a data-toggle='modal' class='openDialog' data-id='"
+                          +reglist[x]+"' data-target='#codeModal'><font color='FF00CC'>"
+                          +reglist[x]+"</font></a>";
+              textcontent = textcontent.replace(reglist[x], 
+                link);
+              $("#codeblocks").html(textcontent);
+            }
+          });
     }
+
+    function funList(text) {
+      var reglist = text.match(/\(.*?\)/g);
+      reglist = reglist.filter(s=>~s.indexOf(":"));
+      return reglist.reduce(function(a,b){
+              if (a.indexOf(b) < 0 ) a.push(b);
+              return a;
+            },[]);
+    }
+
+    $(document).on("click", ".openDialog", function () {
+        var temp = $(this).data('id');
+        temp = temp.replace("(","").replace(")","").split(":");        
+        // temp = temp.replace(")","");        
+        // temp = temp.split(":");
+
+        $.get('/find/'+{{ $id }}+'/'+temp[0], function(response) {
+          $("#exampleModalLongTitle").html(temp[0]);
+          $("#codejam").html(response);
+
+          hljs.initHighlightLinesOnLoad([
+              [{start: temp[1]-1, end: temp[1]-1, color: '#999'}], // Highlight line code
+          ]);          
+        });
+    })
   </script>
 </body>
 

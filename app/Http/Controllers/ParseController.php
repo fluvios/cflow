@@ -57,20 +57,18 @@ class ParseController extends Controller
     // Function for load file page
     public function readDirectory($id) {
         $path = public_path().'/file/' . $id;
-        // $files = $this->readFolder($id);
 
         // find all .COG files
-        $files = $this->getDirContents($path,'/\.cog$/');
+        $files = $this->getDirContents($path,'/\.cgt$/');
         return view('file', compact('id','files')); 
     }
 
     // Function for load result page
     public function analyze($id) {
         $path = public_path().'/file/' . $id;
-        // $files = $this->readFolder($id);
 
         // find all .COG files
-        $files = $this->getDirContents($path,'/\.cog$/');
+        $files = $this->getDirContents($path,'/\.cgt$/');
         foreach($files as $file){
             $codeline = [];
             if ($fh = fopen($file['path'], 'r')) {
@@ -81,6 +79,10 @@ class ParseController extends Controller
                 fclose($fh);
             }
 
+            //Removes all 3 types of line breaks
+            $codeline = str_replace("\r", "", $codeline);
+            $codeline = str_replace("\n", "", $codeline);            
+
             $codes = array(
                 'name' => $file['name'],
                 'flist' => $codeline);
@@ -89,25 +91,28 @@ class ParseController extends Controller
         return view('script', compact('id','codes'));
     }
 
-    // Function read all files in the folder
-    // public function readFolder($id) {
-    //     $path = public_path().'/file/' . $id;
-    //     $files = File::allFiles($path);
-
-    //     foreach( $files as $file ) {
-    //         $filesArr[] = $file->getRelativePathname();
-    //     }        
-
-    //     return $filesArr;
-    // }
-
     // function read specific file
     public function readFile($id,$name) {
+        $path = public_path().'/file/' . $id;
+
+        // find all .COG files
+        $files = $this->getDirContents($path, '/\.cgt$/');
+        foreach($files as $file){
+            if($file['name'] == $name) {
+                $result = $file['content'];
+            }
+        }
+
+        return $result;
+    }
+
+    // function read specific file
+    public function findFile($id,$name) {
         $path = public_path().'/file/' . $id;
         // $files = $this->readFolder($id);
 
         // find all .COG files
-        $files = $this->getDirContents($path, '/\.cog$/');
+        $files = $this->getDirContents($path);
         foreach($files as $file){
             if($file['name'] == $name) {
                 $result = $file['content'];

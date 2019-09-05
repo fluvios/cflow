@@ -20,6 +20,9 @@
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
 
+  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+
 </head>
 
 <body id="page-top">
@@ -49,7 +52,7 @@
     <ul class="sidebar navbar-nav">
       @foreach($codes['flist'] as $code)
       <li class="nav-item active">
-        <a class="nav-link" href="#" onclick="outputFile('{{$id}}','{{$codes['name']}}');">
+        <a class="nav-link" href="#" onclick="outputFile('{{ $code }}');">
           <i class="fas fa-fw fa-cube"></i>
           <span>{{ $code }}</span>
         </a>
@@ -73,12 +76,12 @@
       <div class="container-fluid">
 
         <!-- Code Snippet-->
-        <xpm>
-            <pre id="codeblocks">
-            <!-- your code here -->
+        <pre>
+            <code id="codeblocks">
+              <!-- your code here -->
 
-            </pre>
-        </xpm>
+            </code>
+        </pre>
 
         <!-- Program Statistic  -->
         <div class="card mb-3">
@@ -134,25 +137,6 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" href="login.html">Logout</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Bootstrap core JavaScript-->
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -172,13 +156,33 @@
   <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
   <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 
-  <script>
-    function outputFile(id, filename){
-        document.getElementById("mainfile").innerHTML = filename;
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.1.5/highlightjs-highlight-lines.min.js"></script>
 
-        $.get('/filelist/'+id+'/'+filename, function(response) {
-            $("#codeblocks").html(response);
+  <script>
+    hljs.initHighlightingOnLoad();
+
+    function outputFile(linecode){
+      var temp = funList(linecode);
+      temp = temp[0].replace("(","").replace(")","").split(":");
+      
+      $.get('/find/'+{{ $id }}+'/'+temp[0], function(response) {
+          $("#codeblocks").html(response);
+          $("#mainfile").html(temp[0]);
+          
+          hljs.initHighlightLinesOnLoad([
+              [{start: temp[1]-1, end: temp[1]-1, color: '#999'}], // Highlight line code
+          ]);          
         });
+    }
+
+    function funList(text) {
+      var reglist = text.match(/\(.*?\)/g);
+      reglist = reglist.filter(s=>~s.indexOf(":"));
+      return reglist.reduce(function(a,b){
+              if (a.indexOf(b) < 0 ) a.push(b);
+              return a;
+            },[]);
     }
   </script>
 </body>
