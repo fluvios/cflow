@@ -24,6 +24,14 @@ class ParseController extends Controller
 
             // extract zip file
             Zipper::make($request->file('archive'))->extractTo($path);
+
+            // get result.csv
+            $resloc =  public_path().'/result.csv';
+            $csv = array_map('str_getcsv', file($resloc));
+            array_walk($csv, function(&$a) use ($csv) {
+              $a = array_combine($csv[0], $a);
+            });
+            array_shift($csv); # remove column header
             return redirect()->action(
                 'ParseController@readDirectory', ['id' => $now]
             );    
@@ -58,9 +66,13 @@ class ParseController extends Controller
     public function readDirectory($id) {
         $path = public_path().'/file/' . $id;
 
+        // get result.csv
+        $resloc =  public_path().'/result.csv';
+        $csv = $this->csvHandler($resloc);
+
         // find all .COG files
         $files = $this->getDirContents($path,'/\.cgt$/');
-        return view('file', compact('id','files')); 
+        return view('file', compact('id','files','csv')); 
     }
 
     // Function for load result page
@@ -88,7 +100,11 @@ class ParseController extends Controller
                 'flist' => $codeline);
         }
         
-        return view('script', compact('id','codes'));
+        // get result.csv
+        $resloc =  public_path().'/result.csv';
+        $csv = $this->csvHandler($resloc);
+
+        return view('script', compact('id','codes', 'csv'));
     }
 
     // function read specific file
@@ -104,6 +120,18 @@ class ParseController extends Controller
         }
 
         return $result;
+    }
+
+    // function for csv processing
+    public function csvHandler($path)
+    {
+        $csv = array_map('str_getcsv', file($path));
+        array_walk($csv, function(&$a) use ($csv) {
+            $a = array_combine($csv[0], $a);
+        });
+        array_shift($csv); # remove column header        
+
+        return $csv;
     }
 
     // function read specific file

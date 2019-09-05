@@ -93,28 +93,24 @@
               <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
                 <tbody>
                   <tr>
-                    <td>Source Files: </td>
-                    <td>7</td>
+                    <td>Language: </td>
+                    <td>{{ $csv[0]['language'] }}</td>
                   </tr>
                   <tr>
-                    <td>Directories: </td>
-                    <td>1</td>
+                    <td>Files: </td>
+                    <td>{{ $csv[0]['files'] }}</td>
                   </tr>
                   <tr>
-                    <td>Lines of Code: </td>
-                    <td>15</td>
+                    <td>Blank: </td>
+                    <td>{{ $csv[0]['blank'] }}</td>
                   </tr>
                   <tr>
-                    <td>Average Lines of Code: </td>
-                    <td>8</td>
+                    <td>Comment: </td>
+                    <td>{{ $csv[0]['comment'] }}</td>
                   </tr>
                   <tr>
-                    <td>Comment Lines: </td>
-                    <td>2</td>
-                  </tr>
-                  <tr>
-                    <td>Main Function: </td>
-                    <td>Found</td>
+                    <td>Code: </td>
+                    <td>{{ $csv[0]['code'] }}</td>
                   </tr>
                 </tbody>
               </table>
