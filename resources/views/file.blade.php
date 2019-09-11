@@ -51,13 +51,15 @@
     <!-- Sidebar -->
     <ul class="sidebar navbar-nav">
       @foreach($files as $file)
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="#" onclick="outputFile('{{$id}}','{{$file['name']}}');">
-          <i class="fas fa-fw fa-file"></i>
+          <i class="fas fa-fw fa-block"></i>
+          <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
           <span>{{ $file['name'] }}</span>
         </a>
       </li>
       @endforeach
+      <button type="button" class="btn btn-primary">Primary</button>
     </ul>
 
     <div id="content-wrapper">
