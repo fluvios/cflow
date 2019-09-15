@@ -58,7 +58,7 @@
       <!-- Nav COG Item -->
       @foreach($files as $file)
       <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" onclick="outputFile('{{$id}}','{{$file['name']}}');">
           <span>{{ $file['name'] }}</span>
         </a>
       </li>
@@ -75,67 +75,104 @@
     </ul>
     <!-- End of Sidebar -->
 
-    <div id="content-wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
 
-      <div class="container-fluid">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a id="mainfile" href="#"></a>
-          </li>
-        </ol>
-      </div>
-      <!-- /.container-fluid -->
-    
-      <div class="container-fluid">
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
 
-        <!-- Code Snippet-->
-        <xpm>
-            <pre id="codeblocks">
-              <!-- your code here -->
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
 
-            </pre>
-        </xpm>
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="navbar-brand mr-1" href="{{ url('/filelist/'.$id) }}">Files</a>
+            </li>
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="navbar-brand mr-1" href="{{ url('/analyze/'.$id) }}">Analyze</a>
+            </li>
+          </ul>
 
-        <!-- Program Statistic  -->
-        <div class="card mb-3">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Projects Statistics</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
-                <tbody>
-                  <tr>
-                    <td>Language: </td>
-                    <td>{{ $csv[0]['language'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Files: </td>
-                    <td>{{ $csv[0]['files'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Blank: </td>
-                    <td>{{ $csv[0]['blank'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Comment: </td>
-                    <td>{{ $csv[0]['comment'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Code: </td>
-                    <td>{{ $csv[0]['code'] }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+  
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <!-- Breadcrumbs-->
+            <ol id="headfile" class="breadcrumb">
+            </ol>
           </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
 
-      </div>
-      <!-- /.container-fluid -->
+          <div class="row">
+
+            <!-- Area Code -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 id="mainfile" class="m-0 font-weight-bold text-primary"></h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <xpm>
+                        <pre id="codeblocks">
+                          <!-- your code here -->
+
+                        </pre>
+                    </xpm>
+                </div>
+              </div>
+            </div>
+
+            <!-- Area Project -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Project Statistics</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
+                        <tbody>
+                          <tr>
+                            <td>Language: </td>
+                            <td>{{ $csv[0]['language'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Files: </td>
+                            <td>{{ $csv[0]['files'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Blank: </td>
+                            <td>{{ $csv[0]['blank'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Comment: </td>
+                            <td>{{ $csv[0]['comment'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Code: </td>
+                            <td>{{ $csv[0]['code'] }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      <!-- End of Main Content -->
 
     </div>
     <!-- /.content-wrapper -->
@@ -148,31 +185,31 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-<!-- Modal -->
-<div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- Code Snippet-->
-        <pre>
-            <code id="codejam">
-            <!-- your code here -->
+  <!-- Modal -->
+  <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Code Snippet-->
+          <pre>
+              <code id="codejam">
+              <!-- your code here -->
 
-            </code>
-        </pre>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </code>
+          </pre>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
@@ -187,11 +224,10 @@
   <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="{{ asset('js/sb-admin.min.js') }}"></script>
+  <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
   <!-- Demo scripts for this page-->
   <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
-  <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.1.5/highlightjs-highlight-lines.min.js"></script>
@@ -203,16 +239,37 @@
         document.getElementById("mainfile").innerHTML = filename;
 
         $.get('/filelist/'+id+'/'+filename, function(response) {
-            var textcontent = response;
-            var reglist = funList(response);
-            for(x in reglist) {
-              var link = "<a data-toggle='modal' class='openDialog' data-id='"
-                          +reglist[x]+"' data-target='#codeModal'><font color='FF00CC'>"
-                          +reglist[x]+"</font></a>";
-              textcontent = textcontent.replace(reglist[x], 
-                link);
-              $("#codeblocks").html(textcontent);
+            const linecoder = response.split("[EOF]");
+
+            // Handle Breadcrumb
+            const stateRegex = funList(linecoder[0]);
+            for(x in stateRegex) {
+              const link = "<a data-toggle='modal' class='openDialog' data-id='"
+                          +stateRegex[x]+"' data-target='#codeModal'><font color='FF00CC'>"
+                          +stateRegex[x]+"</font></a>"; 
+              linecoder[0] = linecoder[0].replace(stateRegex[x], link);             
             }
+            var regexline = linecoder[0].match(/[^\r\n]+/g);
+            for(x in regexline) {
+              // Clear Previous Item
+              // document.getElementById('content').removeChild(input.parentNode);
+
+              // Add Current Item
+              const div = document.createElement('li');
+              div.className = 'breadcrumb-item';
+              div.innerHTML = regexline[x];
+              document.getElementById('headfile').appendChild(div);
+            }
+            
+            // Handle Codeline
+            const contentRegex = funList(linecoder[1]);
+            for(x in contentRegex) {
+              const link = "<a data-toggle='modal' class='openDialog' data-id='"
+                          +contentRegex[x]+"' data-target='#codeModal'><font color='FF00CC'>"
+                          +contentRegex[x]+"</font></a>"; 
+              linecoder[1] = linecoder[1].replace(contentRegex[x], link);             
+            }
+            $("#codeblocks").html(linecoder[1]);
           });
     }
 
@@ -228,8 +285,6 @@
     $(document).on("click", ".openDialog", function () {
         var temp = $(this).data('id');
         temp = temp.replace("(","").replace(")","").split(":");        
-        // temp = temp.replace(")","");        
-        // temp = temp.split(":");
 
         $.get('/find/'+{{ $id }}+'/'+temp[0], function(response) {
           $("#exampleModalLongTitle").html(temp[0]);

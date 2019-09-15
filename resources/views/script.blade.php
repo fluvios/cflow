@@ -13,12 +13,10 @@
 
   <!-- Custom fonts for this template-->
   <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-
-  <!-- Page level plugin CSS-->
-  <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
   <link rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
@@ -27,100 +25,141 @@
 
 <body id="page-top">
 
-  <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-    <a class="navbar-brand mr-1" href="{{ url('/') }}">Fun CaG</a>
-
-    <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
-      <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Navbar -->
-    <ul class="navbar-nav ml-auto ml-md-0">
-      <li class="nav-item dropdown no-arrow mx-1">
-        <a class="navbar-brand mr-1" href="{{ url('/filelist/'.$id) }}">Files</a>
-      </li>
-      <li class="nav-item dropdown no-arrow mx-1">
-        <a class="navbar-brand mr-1" href="{{ url('/analyze/'.$id) }}">Analyze</a>
-      </li>
-    </ul>
-  </nav>
-
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="sidebar navbar-nav">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Fun CAG</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Files
+      </div>
+
+      <!-- Nav COG Item -->
       @foreach($codes['flist'] as $code)
-      <li class="nav-item active">
-        <a class="nav-link" href="#" onclick="outputFile('{{ $code }}');">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" onclick="outputFile('{{ $code }}');">
           <i class="fas fa-fw fa-cube"></i>
-          <span>{{ $code }}</span>
+          <span>{{ $code }}</span>        
         </a>
       </li>
       @endforeach
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
     </ul>
+    <!-- End of Sidebar -->
 
-    <div id="content-wrapper">
+    <div id="content-wrapper" class="d-flex flex-column">
 
-      <div class="container-fluid">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a id="mainfile" href="#"></a>
-          </li>
-        </ol>
-      </div>
-      <!-- /.container-fluid -->
-    
-      <div class="container-fluid">
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
 
-        <!-- Code Snippet-->
-        <pre>
-            <code id="codeblocks">
-              <!-- your code here -->
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
 
-            </code>
-        </pre>
+            <!-- Nav Item - Messages -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="navbar-brand mr-1" href="{{ url('/filelist/'.$id) }}">Files</a>
+            </li>
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="navbar-brand mr-1" href="{{ url('/analyze/'.$id) }}">Analyze</a>
+            </li>
+          </ul>
 
-        <!-- Program Statistic  -->
-        <div class="card mb-3">
-          <div class="card-header">
-            <i class="fas fa-table"></i>
-            Projects Statistics</div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
-                <tbody>
-                  <tr>
-                    <td>Language: </td>
-                    <td>{{ $csv[0]['language'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Files: </td>
-                    <td>{{ $csv[0]['files'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Blank: </td>
-                    <td>{{ $csv[0]['blank'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Comment: </td>
-                    <td>{{ $csv[0]['comment'] }}</td>
-                  </tr>
-                  <tr>
-                    <td>Code: </td>
-                    <td>{{ $csv[0]['code'] }}</td>
-                  </tr>
-                </tbody>
-              </table>
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+  
+          <div class="row">
+
+            <!-- Area Code -->
+            <div class="col-xl-8 col-lg-7">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 id="mainfile" class="m-0 font-weight-bold text-primary"></h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                  <pre>
+                      <code id="codeblocks">
+                        <!-- your code here -->
+
+                      </code>
+                  </pre>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-        </div>
 
-      </div>
-      <!-- /.container-fluid -->
+            <!-- Area Project -->
+            <div class="col-xl-4 col-lg-5">
+              <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Project Statistics</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
+                        <tbody>
+                          <tr>
+                            <td>Language: </td>
+                            <td>{{ $csv[0]['language'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Files: </td>
+                            <td>{{ $csv[0]['files'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Blank: </td>
+                            <td>{{ $csv[0]['blank'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Comment: </td>
+                            <td>{{ $csv[0]['comment'] }}</td>
+                          </tr>
+                          <tr>
+                            <td>Code: </td>
+                            <td>{{ $csv[0]['code'] }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      <!-- End of Main Content -->
 
     </div>
     <!-- /.content-wrapper -->
@@ -146,11 +185,10 @@
   <script src="{{ asset('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="{{ asset('js/sb-admin.min.js') }}"></script>
+  <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
 
   <!-- Demo scripts for this page-->
   <script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
-  <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
   <script src="//cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.1.5/highlightjs-highlight-lines.min.js"></script>
