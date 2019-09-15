@@ -39,15 +39,6 @@
       </a>
 
       <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="index.html">
-          <span>Export Files</span></a>
-      </li>
-
-      <!-- Divider -->
       <hr class="sidebar-divider">
 
       <!-- Heading -->
@@ -56,13 +47,25 @@
       </div>
 
       <!-- Nav COG Item -->
-      @foreach($files as $file)
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" onclick="outputFile('{{$id}}','{{$file['name']}}');">
-          <span>{{ $file['name'] }}</span>
-        </a>
-      </li>
-      @endforeach
+      <form>
+          @foreach($files as $file)
+          <li class="nav-item">
+            <a class="nav-link collapsed" href="#" onclick="outputFile('{{$id}}','{{$file['name']}}');">
+              <input type="checkbox" name="uploadscript" value="{{ $file['name'] }}">
+              <span>{{ $file['name'] }}</span>
+            </a>
+          </li>
+          @endforeach
+
+        <!-- Divider -->
+        <hr class="sidebar-divider  my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item active" onclick="exportFile()">
+          <a class="nav-link" href="#">
+            <span>Export Files</span></a>
+        </li>
+      </form>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -249,11 +252,11 @@
                           +stateRegex[x]+"</font></a>"; 
               linecoder[0] = linecoder[0].replace(stateRegex[x], link);             
             }
+
+            // Clear Previous Item
+            $('#headfile > li').remove();
             var regexline = linecoder[0].match(/[^\r\n]+/g);
             for(x in regexline) {
-              // Clear Previous Item
-              // document.getElementById('content').removeChild(input.parentNode);
-
               // Add Current Item
               const div = document.createElement('li');
               div.className = 'breadcrumb-item';
@@ -295,6 +298,19 @@
           ]);          
         });
     })
+
+    function exportFile() {
+      var uploadScript = document.forms[0];
+      var txt = "";
+      var i;
+      for (i = 0; i < uploadScript.length; i++) {
+        if (uploadScript[i].checked) {
+          txt = txt + uploadScript[i].value + " ";
+        }
+      }
+      
+      alert("Uploaded file: "+ txt);
+    }    
   </script>
 </body>
 
