@@ -61,7 +61,7 @@
         <hr class="sidebar-divider  my-0">
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item active" onclick="exportFile()">
+        <li class="nav-item active" onclick="exportFile('{{$id}}')">
           <a class="nav-link" href="#">
             <span>Export Files</span></a>
         </li>
@@ -299,17 +299,19 @@
         });
     })
 
-    function exportFile() {
+    function exportFile(id) {
       var uploadScript = document.forms[0];
       var txt = "";
       var i;
       for (i = 0; i < uploadScript.length; i++) {
         if (uploadScript[i].checked) {
-          txt = txt + uploadScript[i].value + " ";
+            let fileName = uploadScript[i].value;
+            const link = document.createElement('a');
+            link.href = '/filelist/'+id+'/'+uploadScript[i].value;
+            link.download = fileName;
+            link.click();
         }
-      }
-      
-      alert("Uploaded file: "+ txt);
+      }      
     }    
   </script>
 </body>
