@@ -25,13 +25,6 @@ class ParseController extends Controller
             // extract zip file
             Zipper::make($request->file('archive'))->extractTo($path);
 
-            // get result.csv
-            $resloc =  public_path().'/result.csv';
-            $csv = array_map('str_getcsv', file($resloc));
-            array_walk($csv, function(&$a) use ($csv) {
-              $a = array_combine($csv[0], $a);
-            });
-            array_shift($csv); # remove column header
             return redirect()->action(
                 'ParseController@readDirectory', ['id' => $now]
             );    
@@ -64,7 +57,7 @@ class ParseController extends Controller
 
     // Function for load file page
     public function readDirectory($id) {
-        $path = public_path().'/file/' . $id;
+        $path = public_path().'/file/' . $id . '/';
 
         // get result.csv
         $resloc =  public_path().'/result.csv';
@@ -72,7 +65,8 @@ class ParseController extends Controller
 
         // find all .COG files
         $files = $this->getDirContents($path,'/\.cgt$/');
-        return view('file', compact('id','files','csv')); 
+        echo var_dump($this->scan_dir($path));
+        // return view('file', compact('id','files','csv')); 
     }
 
     // Function for load result page
@@ -122,6 +116,25 @@ class ParseController extends Controller
         return $result;
     }
 
+    // function for calculate number of file and folders
+    function scan_dir($path){
+        $ite=new \RecursiveDirectoryIterator($path);
+    
+        $bytestotal=0;
+        $nbfiles=0;
+        foreach (new \RecursiveIteratorIterator($ite) as $filename=>$cur) {
+            $filesize=$cur->getSize();
+            $bytestotal+=$filesize;
+            $nbfiles++;
+            $files[] = $filename;
+        }
+    
+        $bytestotal=number_format($bytestotal);
+    
+        return array('total_files'=>$nbfiles,'total_size'=>$bytestotal,'files'=>$files);
+    }
+
+
     // function for csv processing
     public function csvHandler($path)
     {
@@ -149,5 +162,4 @@ class ParseController extends Controller
 
         return $result;
     }
-    
 }

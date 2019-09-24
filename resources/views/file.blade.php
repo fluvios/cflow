@@ -147,23 +147,23 @@
                         <tbody>
                           <tr>
                             <td>Language: </td>
-                            <td>{{ $csv[0]['language'] }}</td>
+                            <td id="statLang"></td>
                           </tr>
                           <tr>
                             <td>Files: </td>
-                            <td>{{ $csv[0]['files'] }}</td>
+                            <td id="statFiles"></td>
                           </tr>
                           <tr>
-                            <td>Blank: </td>
-                            <td>{{ $csv[0]['blank'] }}</td>
+                            <td>Folders: </td>
+                            <td id="statFolder"></td>
                           </tr>
                           <tr>
-                            <td>Comment: </td>
-                            <td>{{ $csv[0]['comment'] }}</td>
+                            <td>Methods: </td>
+                            <td id="statMeth"></td>
                           </tr>
                           <tr>
-                            <td>Code: </td>
-                            <td>{{ $csv[0]['code'] }}</td>
+                            <td>Recursive Methods: </td>
+                            <td id="statRec"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -189,8 +189,8 @@
   </a>
 
   <!-- Modal -->
-  <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+  <div class="modal fade bd-example-modal-lg" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLongTitle"></h5>
@@ -240,16 +240,19 @@
 
     function outputFile(id, filename){
         document.getElementById("mainfile").innerHTML = filename;
+        codeStatistics();
 
         $.get('/filelist/'+id+'/'+filename, function(response) {
             const linecoder = response.split("[EOF]");
 
             // Handle Breadcrumb
             const stateRegex = funList(linecoder[0]);
+            linecoder[1] = linecoder[0];
             for(x in stateRegex) {
-              const link = "<a data-toggle='modal' class='openDialog' data-id='"
-                          +stateRegex[x]+"' data-target='#codeModal'><font color='FF00CC'>"
-                          +stateRegex[x]+"</font></a>"; 
+              // const link = "<a data-toggle='modal' class='openDialog' data-id='"
+              //             +stateRegex[x]+"' data-target='#codeModal'><font color='FF00CC'>"
+              //             +stateRegex[x]+"</font></a>"; 
+              const link = "";
               linecoder[0] = linecoder[0].replace(stateRegex[x], link);             
             }
 
@@ -260,7 +263,8 @@
               // Add Current Item
               const div = document.createElement('li');
               div.className = 'breadcrumb-item';
-              div.innerHTML = regexline[x];
+              let cleanRegex = regexline[x].replace(":","");
+              div.innerHTML = cleanRegex;
               document.getElementById('headfile').appendChild(div);
             }
             
@@ -289,13 +293,15 @@
         var temp = $(this).data('id');
         temp = temp.replace("(","").replace(")","").split(":");        
 
+        $("html, body").scrollTop($('#codejam').position().top);         
+
         $.get('/find/'+{{ $id }}+'/'+temp[0], function(response) {
           $("#exampleModalLongTitle").html(temp[0]);
           $("#codejam").html(response);
-
+ 
           hljs.initHighlightLinesOnLoad([
               [{start: temp[1]-1, end: temp[1]-1, color: '#999'}], // Highlight line code
-          ]);          
+          ]);
         });
     })
 
@@ -312,6 +318,14 @@
             link.click();
         }
       }      
+    }
+
+    function codeStatistics() {
+      $("#statLang").html("{{ $csv[0]['language'] }}");
+      $("#statFiles").html("{{ $csv[0]['language'] }}");
+      $("#statFolder").html("{{ $csv[0]['language'] }}");
+      $("#statMeth").html("{{ $csv[0]['language'] }}");
+      $("#statRec").html("{{ $csv[0]['language'] }}");            
     }    
   </script>
 </body>
