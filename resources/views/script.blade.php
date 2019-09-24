@@ -127,26 +127,26 @@
                 <div class="card-body">
                     <div class="table-responsive">
                       <table class="table table-bordered" id="dataTables" width="100%" cellspacing="0">
-                        <tbody>
+                      <tbody>
                           <tr>
                             <td>Language: </td>
-                            <td>{{ $csv[0]['language'] }}</td>
+                            <td id="statLang"></td>
                           </tr>
                           <tr>
                             <td>Files: </td>
-                            <td>{{ $csv[0]['files'] }}</td>
+                            <td id="statFiles"></td>
                           </tr>
                           <tr>
-                            <td>Blank: </td>
-                            <td>{{ $csv[0]['blank'] }}</td>
+                            <td>Folders: </td>
+                            <td id="statFolder"></td>
                           </tr>
                           <tr>
-                            <td>Comment: </td>
-                            <td>{{ $csv[0]['comment'] }}</td>
+                            <td>Methods: </td>
+                            <td id="statMeth"></td>
                           </tr>
                           <tr>
-                            <td>Code: </td>
-                            <td>{{ $csv[0]['code'] }}</td>
+                            <td>Recursive Methods: </td>
+                            <td id="statRec"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -199,7 +199,8 @@
     function outputFile(linecode){
       var temp = funList(linecode);
       temp = temp[0].replace("(","").replace(")","").split(":");
-      
+      codeStatistics({{ $id }}, "{{ $codes['name'] }}");      
+
       $.get('/find/'+{{ $id }}+'/'+temp[0], function(response) {
           $("#codeblocks").html(response);
           $("#mainfile").html(temp[0]);
@@ -217,6 +218,20 @@
               if (a.indexOf(b) < 0 ) a.push(b);
               return a;
             },[]);
+    }
+
+    function codeStatistics(id, filename) {
+      $("#statLang").html("{{ $csv[0]['language'] }}");
+      $("#statFiles").html("{{ $stat['total_files'] }}");
+      $("#statFolder").html("{{ $stat['total_folder'] }}");
+      countRegex(id, filename);
+    }    
+
+    function countRegex(id, filename) {
+      $.get('/filelist/'+id+'/'+filename, function(response) {
+        $("#statMeth").html(response.split("*").length);
+        $("#statRec").html(response.split("[R]").length);            
+      });
     }
   </script>
 </body>

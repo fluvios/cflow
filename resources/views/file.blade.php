@@ -240,7 +240,7 @@
 
     function outputFile(id, filename){
         document.getElementById("mainfile").innerHTML = filename;
-        codeStatistics();
+        codeStatistics(id, filename);
 
         $.get('/filelist/'+id+'/'+filename, function(response) {
             const linecoder = response.split("[EOF]");
@@ -320,13 +320,19 @@
       }      
     }
 
-    function codeStatistics() {
+    function codeStatistics(id, filename) {
       $("#statLang").html("{{ $csv[0]['language'] }}");
-      $("#statFiles").html("{{ $csv[0]['language'] }}");
-      $("#statFolder").html("{{ $csv[0]['language'] }}");
-      $("#statMeth").html("{{ $csv[0]['language'] }}");
-      $("#statRec").html("{{ $csv[0]['language'] }}");            
+      $("#statFiles").html("{{ $code['total_files'] }}");
+      $("#statFolder").html("{{ $code['total_folder'] }}");
+      countRegex(id, filename);
     }    
+
+    function countRegex(id, filename) {
+      $.get('/filelist/'+id+'/'+filename, function(response) {
+        $("#statMeth").html(response.split("*").length);
+        $("#statRec").html(response.split("[R]").length);            
+      });
+    }
   </script>
 </body>
 
