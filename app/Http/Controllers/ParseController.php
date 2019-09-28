@@ -93,7 +93,7 @@ class ParseController extends Controller
             }
 
             //Remove EOF Token
-            for ($i=0; $i <= 3; $i++) { 
+            for ($i=0; $i <= $loc; $i++) { 
                 # code...
                 array_shift($codeline);
             }
@@ -181,7 +181,7 @@ class ParseController extends Controller
         $files = $this->getDirContents($path);
         foreach($files as $file){
             if($file['name'] == $name) {
-                $result = $file['content'];
+                $result =  preg_split("/\r\n|\n|\r/", $file['content']);
             }
         }
 

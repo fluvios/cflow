@@ -1,6 +1,7 @@
 main() (main.c:131):
     initScreens() (main.c:11):
     waitBootromLocked() (main.c:126):
+    waitBootromLocked() (main.c:126):
     memcpy() (memory.c:29):[EOF]
 initScreens * (main.c:11) void initScreens (void)
 initScreens   (main.c:142)
